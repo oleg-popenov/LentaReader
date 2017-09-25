@@ -1,5 +1,6 @@
 package com.test.lentareader.utils;
 
+import android.content.Context;
 import android.support.v7.widget.RecyclerView;
 import android.text.format.DateUtils;
 import android.view.LayoutInflater;
@@ -7,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.test.lentareader.DetailsActivity;
 import com.test.lentareader.R;
 import com.test.lentareader.network.models.RSS;
 
@@ -21,7 +23,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
     }
 
     private List<RSS.Channel.Item> list = new ArrayList<>();
-    static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
+    private static SimpleDateFormat timeFormat = new SimpleDateFormat("hh:mm");
 
     public void setList(List<RSS.Channel.Item> list) {
         this.list = list;
@@ -46,6 +48,13 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
                 System.currentTimeMillis(),
                 DateUtils.DAY_IN_MILLIS);
         holder.day.setText(day);
+        final String url = item.getLink();
+        holder.view.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DetailsActivity.startActivity(view.getContext(), url);
+            }
+        });
 
     }
 
@@ -55,6 +64,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
     }
 
     static class VH extends RecyclerView.ViewHolder{
+        View view;
         TextView time;
         TextView day;
         TextView category;
@@ -62,6 +72,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.VH> {
 
         public VH(View itemView) {
             super(itemView);
+            view = itemView;
             time = itemView.findViewById(R.id.time);
             day = itemView.findViewById(R.id.day);
             category = itemView.findViewById(R.id.category);

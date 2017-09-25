@@ -23,7 +23,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-public class NewsActivity extends AppCompatActivity implements Presentable<NewsListViewState>, SwipeRefreshLayout.OnRefreshListener {
+public class NewsActivity extends AppCompatActivity implements Presentable<NewsListViewState>,
+                                        SwipeRefreshLayout.OnRefreshListener {
     RecyclerView newsList;
     SwipeRefreshLayout swipeLayout;
     NewsListPresenter presenter;
@@ -54,7 +55,6 @@ public class NewsActivity extends AppCompatActivity implements Presentable<NewsL
 
     @Override
     public void render(NewsListViewState viewState) {
-
         swipeLayout.setRefreshing(viewState.isLoading());
         newsList.setAdapter(viewState.getAdapter());
         if(!TextUtils.isEmpty(viewState.getError())){
