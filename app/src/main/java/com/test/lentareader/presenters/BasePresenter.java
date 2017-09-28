@@ -4,21 +4,24 @@ import com.test.lentareader.presenters.viewstate.ViewState;
 
 public class BasePresenter<T extends ViewState> {
 
+    protected static final String BASE = "https://lenta.ru";
+
     T state = null;
 
     private Presentable<T> view;
 
     Presentable<T> getView() {
         return view;
-    };
-    public void setView(Presentable<T> view){
+    }
+
+    public void setView(Presentable<T> view) {
         this.view = view;
-        if(state != null){
+        if (state != null) {
             present(state);
         }
     }
 
-    void present(T state){
+    void present(T state) {
         getView().render(state);
         this.state = state;
     }

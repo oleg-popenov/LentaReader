@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.widget.Toast;
 
@@ -13,18 +14,24 @@ import com.test.lentareader.presenters.DetailsPresenter;
 import com.test.lentareader.presenters.Presentable;
 import com.test.lentareader.presenters.viewstate.DetailsViewState;
 
-public class DetailsActivity extends AppCompatActivity implements Presentable<DetailsViewState>{
+import java.util.ArrayList;
 
-    private static final String EXTRA_URL = "url";
+public class DetailsActivity extends AppCompatActivity implements Presentable<DetailsViewState> {
+
+    private static final String EXTRA_TITLE = "title";
+    private static final String EXTRA_URL = "urls";
     RecyclerView detailsList;
     DetailsPresenter presenter;
-    String url;
+    ArrayList<String> urls;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-        url = getIntent().getStringExtra(EXTRA_URL);
+        urls = getIntent().getStringArrayListExtra(EXTRA_URL);
+        Toolbar toolbar = findViewById(R.id.toolbar);
+        String title = getIntent().getStringExtra(EXTRA_TITLE);
+        toolbar.setTitle(title.toUpperCase());
         detailsList = findViewById(R.id.details_list);
         detailsList.setLayoutManager(new LinearLayoutManager(this));
     }
@@ -32,9 +39,9 @@ public class DetailsActivity extends AppCompatActivity implements Presentable<De
     @Override
     protected void onStart() {
         super.onStart();
-        presenter = (DetailsPresenter) ((ReaderApp)getApplicationContext())
+        presenter = (DetailsPresenter) ((ReaderApp) getApplicationContext())
                 .bind(this, DetailsViewState.class);
-        presenter.loadPage(url);
+        presenter.loadPage(urls);
     }
 
     @Override
@@ -47,14 +54,15 @@ public class DetailsActivity extends AppCompatActivity implements Presentable<De
     @Override
     public void render(DetailsViewState viewState) {
         detailsList.setAdapter(viewState.getAdapter());
-        if(!TextUtils.isEmpty(viewState.getError())){
+        if (!TextUtils.isEmpty(viewState.getError())) {
             Toast.makeText(this, viewState.getError(), Toast.LENGTH_LONG).show();
         }
     }
 
-    public static void startActivity(Context context, String url){
+    public static void startActivity(Context context, String title, ArrayList<String> urls) {
         Intent intent = new Intent(context, DetailsActivity.class);
-        intent.putExtra(EXTRA_URL, url);
+        intent.putExtra(EXTRA_TITLE, title);
+        intent.putStringArrayListExtra(EXTRA_URL, urls);
         context.startActivity(intent);
     }
 }

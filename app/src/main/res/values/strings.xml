@@ -1,3 +1,4 @@
 <resources>
     <string name="app_name">LentaReader</string>
+    <string name="network_error_msg">Network error</string>
 </resources>
